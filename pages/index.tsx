@@ -20,15 +20,15 @@ export const getStaticProps = async () => {
   }
 }
 
-type HomeProps = {
-  datas2: object[]
-}
-
-interface X {
+interface SomeObj  {
   userId:number,
   id:number,
   title:string,
   body:string
+}
+
+type HomeProps = {
+  datas2:SomeObj[]
 }
 
 
@@ -86,7 +86,7 @@ export default function Home({ datas2 }: HomeProps) {
     if (!chosenWorks.includes(Number(e.target.id))) {
       if (e.target.id === '9999') {
         let subArr: number[] = [9999]
-        datas.forEach((x) => subArr.push(x.id))
+        datas.forEach(x => subArr.push(x.id))
         setChosenWorks(subArr)
 
       } else {

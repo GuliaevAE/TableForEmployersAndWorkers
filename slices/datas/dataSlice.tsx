@@ -1,9 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
+ type SomeObj = {
+  userId:number,
+  id:number,
+  title:string,
+  body:string
+}
+
+type HomeProps1 = SomeObj[]
+
 export interface CounterState {
-  value: object[] ,
-  readOnlyValue: object[]
+  value: HomeProps1 ,
+  readOnlyValue: HomeProps1
 }
 
 const initialState: CounterState = {
@@ -17,7 +26,7 @@ export const dataSlice = createSlice({
   name: 'datas',
   initialState,
   reducers: {
-    uploadAllFirst:(state, action: PayloadAction<object[]>)=>{
+    uploadAllFirst:(state, action: PayloadAction<HomeProps1>)=>{
       state.readOnlyValue = action.payload
 
     },
@@ -28,7 +37,7 @@ export const dataSlice = createSlice({
       state.value =[]
   },
     uploadAdd: (state, action: PayloadAction<string>) => {
-          let clone: object[] = state.value.slice()
+          let clone: HomeProps1 = state.value.slice()
           state.readOnlyValue.forEach((x: any) => {
             let i: string = action.payload
             if (x.userId === Number(i)) {
@@ -41,7 +50,7 @@ export const dataSlice = createSlice({
      
     },
     uploadRemove:(state, action: PayloadAction<string>)=>{
-      let clone: object[] = state.value.slice()
+      let clone: HomeProps1 = state.value.slice()
       let i: string = action.payload
       clone = clone.filter((x:any)=>x.userId !== Number(i))
       state.value = clone
