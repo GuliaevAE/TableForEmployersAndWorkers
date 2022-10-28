@@ -1,24 +1,31 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-import { RootState } from '../store'
-import { useSelector, useDispatch } from 'react-redux'
-import { uploadAdd, uploadAll, uploadRemove, uploadAllFirst, uploadAllRemove } from '../slices/datas/dataSlice'
-import { useEffect, useState } from 'react'
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from '../styles/Home.module.css';
+import { RootState } from '../store';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  uploadAdd,
+  uploadAll,
+  uploadRemove,
+  uploadAllFirst,
+  uploadAllRemove,
+} from '../slices/datas/dataSlice';
+import { useEffect, useState } from 'react';
 
 export const getStaticProps = async () => {
-  const response = await fetch('https://jsonplaceholder.typicode.com/posts')
-  const data = await response.json()
+  const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+  const data = await response.json();
   if (!data) {
     return {
-      notFound: true
-    }
+      notFound: true,
+    };
   }
 
   return {
-    props: { datas2: data }
-  }
-}
+    props: { datas2: data },
+  };
+};
+
 
 interface SomeObj  {
   userId:number,
@@ -33,54 +40,56 @@ type HomeProps = {
 
 
 
+
 export default function Home({ datas2 }: HomeProps) {
-  const datas = useSelector((state: RootState) => state.datas.value)
-  const readOnlydatas = useSelector((state: RootState) => state.datas.readOnlyValue)
-  const dispatch = useDispatch()
+  const datas = useSelector((state: RootState) => state.datas.value);
+  const readOnlydatas = useSelector(
+    (state: RootState) => state.datas.readOnlyValue
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(uploadAllFirst(datas2))
-  }, [datas2, dispatch])
+    dispatch(uploadAllFirst(datas2));
+  }, [datas2, dispatch]);
 
-  const [chosenEmps, setChosenEmps] = useState<number[]>([])
-  const [chosenWorks, setChosenWorks] = useState<number[]>([])
+  const [chosenEmps, setChosenEmps] = useState<number[]>([]);
+  const [chosenWorks, setChosenWorks] = useState<number[]>([]);
 
-
-  let employers: number[] = []
+  let employers: number[] = [];
   readOnlydatas.forEach((x: any) => {
     if (employers.indexOf(x.userId) === -1) {
-      employers.push(x.userId)
+      employers.push(x.userId);
     }
-  })
+  });
 
   function checkTheBoxForEmployers(e: any) {
     if (!chosenEmps.includes(Number(e.target.id))) {
       if (e.target.id === '9999') {
-        let subArr: number[] = [9999]
-        employers.forEach(x => subArr.push(x))
-        setChosenEmps(subArr)
-        dispatch(uploadAll())
+        let subArr: number[] = [9999];
+        employers.forEach((x) => subArr.push(x));
+        setChosenEmps(subArr);
+        dispatch(uploadAll());
       } else {
-        let subArr: number[] = chosenEmps.slice()
-        subArr.push(Number(e.target.id))
-        setChosenEmps(subArr)
-        dispatch(uploadAdd(e.target.id))
+        let subArr: number[] = chosenEmps.slice();
+        subArr.push(Number(e.target.id));
+        setChosenEmps(subArr);
+        dispatch(uploadAdd(e.target.id));
       }
     }
     if (chosenEmps.includes(Number(e.target.id))) {
       if (e.target.id === '9999') {
-        let subArr: number[] = []
-        setChosenEmps(subArr)
-        dispatch(uploadAllRemove())
+        let subArr: number[] = [];
+        setChosenEmps(subArr);
+        dispatch(uploadAllRemove());
       } else {
-        let subArr: number[] = chosenEmps.slice().filter(x => x !== Number(e.target.id))
-        setChosenEmps(subArr)
-        dispatch(uploadRemove(e.target.id))
+        let subArr: number[] = chosenEmps
+          .slice()
+          .filter((x) => x !== Number(e.target.id));
+        setChosenEmps(subArr);
+        dispatch(uploadRemove(e.target.id));
       }
     }
-
   }
-
 
   function checkTheBoxForWorkers(e: any) {
     if (!chosenWorks.includes(Number(e.target.id))) {
@@ -89,73 +98,108 @@ export default function Home({ datas2 }: HomeProps) {
         datas.forEach(x => subArr.push(x.id))
         setChosenWorks(subArr)
 
-      } else {
-        let subArr: number[] = chosenWorks.slice()
-        subArr.push(Number(e.target.id))
-        setChosenWorks(subArr)
 
+      } else {
+        let subArr: number[] = chosenWorks.slice();
+        subArr.push(Number(e.target.id));
+        setChosenWorks(subArr);
       }
     }
     if (chosenWorks.includes(Number(e.target.id))) {
       if (e.target.id === '9999') {
-        let subArr: number[] = []
-        setChosenWorks(subArr)
-
+        let subArr: number[] = [];
+        setChosenWorks(subArr);
       } else {
-        let subArr: number[] = chosenWorks.slice().filter(x => x !== Number(e.target.id))
-        setChosenWorks(subArr)
-
+        let subArr: number[] = chosenWorks
+          .slice()
+          .filter((x) => x !== Number(e.target.id));
+        setChosenWorks(subArr);
       }
     }
-
   }
 
-
-
   return (
-    <div className={styles.container} >
+    <div className={styles.container}>
       <Head>
         <title>Create Next App</title>
         <meta name="description" content="Generated by create next app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-
       <main className={styles.main}>
-        <table className={styles.table} >
+        <table className={styles.table}>
           <tbody>
             <tr className={chosenEmps.includes(9999) ? styles.activeTr : ''}>
               <td>
-                <input id='9999' onClick={(e) => checkTheBoxForEmployers(e)} type='checkbox' checked={chosenEmps.includes(9999)} />
+                <input
+                  id="9999"
+                  onClick={(e) => checkTheBoxForEmployers(e)}
+                  type="checkbox"
+                  checked={chosenEmps.includes(9999)}
+                />
               </td>
-              <td>
-                All
-              </td>
+              <td>All</td>
             </tr>
             {employers.map((x: number) => {
-              return (<tr className={chosenEmps.includes(x) ? styles.activeTr : ''} key={x}><td> <input id={x.toString()} onClick={(e) => checkTheBoxForEmployers(e)} type='checkbox' checked={chosenEmps.includes(x)} /> </td><td>Employer {x}</td></tr>)
+              return (
+                <tr
+                  className={chosenEmps.includes(x) ? styles.activeTr : ''}
+                  key={x}
+                >
+                  <td>
+                    {' '}
+                    <input
+                      id={x.toString()}
+                      onClick={(e) => checkTheBoxForEmployers(e)}
+                      type="checkbox"
+                      checked={chosenEmps.includes(x)}
+                    />{' '}
+                  </td>
+                  <td>Employer {x}</td>
+                </tr>
+              );
             })}
           </tbody>
         </table>
-        {datas.length!==0&&<table className={styles.table} >
-        <tbody>
-          <tr className={chosenWorks.includes(9999) ? styles.activeTr : ''}>
-            <td>
-              <input id='9999' onClick={(e) => checkTheBoxForWorkers(e)} type='checkbox' checked={chosenWorks.includes(9999)} />
-            </td>
-            <td>
-              All({datas.length})
-            </td>
-          </tr>
-            {datas.map((x: any) => {
-              return (<tr className={chosenWorks.includes(x.id) ? styles.activeTr : ''} key={x.id}><td><input id={x.id} onClick={(e) => checkTheBoxForWorkers(e)} type='checkbox' checked={chosenWorks.includes(x.id)} /> {x.id} </td><td>Worker title: {x.title}</td></tr>)
-            })}
-          </tbody>
-        </table>}
-
+        {datas.length !== 0 && (
+          <table className={styles.table}>
+            <tbody>
+              <tr className={chosenWorks.includes(9999) ? styles.activeTr : ''}>
+                <td>
+                  <input
+                    id="9999"
+                    onClick={(e) => checkTheBoxForWorkers(e)}
+                    type="checkbox"
+                    checked={chosenWorks.includes(9999)}
+                  />
+                </td>
+                <td>All({datas.length})</td>
+              </tr>
+              {datas.map((x: any) => {
+                return (
+                  <tr
+                    className={
+                      chosenWorks.includes(x.id) ? styles.activeTr : ''
+                    }
+                    key={x.id}
+                  >
+                    <td>
+                      <input
+                        id={x.id}
+                        onClick={(e) => checkTheBoxForWorkers(e)}
+                        type="checkbox"
+                        checked={chosenWorks.includes(x.id)}
+                      />{' '}
+                      {x.id}{' '}
+                    </td>
+                    <td>Worker title: {x.title}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </main>
-
-
     </div>
-  )
+  );
 }
